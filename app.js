@@ -136,16 +136,7 @@ updatePerm();
  
 function makeIcon() {
   if (customLogoData) return customLogoData;
-  const c = document.createElement('canvas');
-  c.width = c.height = 192;
-  const ctx = c.getContext('2d');
-  ctx.fillStyle = '#16161d';
-  ctx.fillRect(0, 0, 192, 192);
-  ctx.font = '120px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(selectedLogo || '🔔', 96, 104);
-  return c.toDataURL('image/png');
+  return './icon-192.png';
 }
  
 document.getElementById('startBtn').onclick = async () => {
