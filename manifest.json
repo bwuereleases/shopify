@@ -1,6 +1,6 @@
 {
-  "name": "Random Notifier",
-  "short_name": "Notifier",
+  "name": "Reminders",
+  "short_name": "Reminders",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
