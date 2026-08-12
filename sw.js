@@ -1,11 +1,11 @@
 const CACHE = 'notifier-v2';
 const ASSETS = ['./', './index.html', './app.js', './manifest.json'];
- 
+
 self.addEventListener('install', (e) => {
   self.skipWaiting();
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS).catch(() => {})));
 });
- 
+
 self.addEventListener('activate', (e) => {
   e.waitUntil(
     caches.keys().then((names) =>
@@ -13,15 +13,15 @@ self.addEventListener('activate', (e) => {
     ).then(() => clients.claim())
   );
 });
- 
+
 self.addEventListener('fetch', (e) => {
   e.respondWith(
     caches.match(e.request).then((r) => r || fetch(e.request).catch(() => caches.match('./index.html')))
   );
 });
- 
+
 let timers = [];
- 
+
 self.addEventListener('message', (e) => {
   const data = e.data || {};
   if (data.type === 'SCHEDULE') {
@@ -31,7 +31,7 @@ self.addEventListener('message', (e) => {
     data.fireTimes.forEach((ts, i) => {
       const delay = Math.max(0, ts - now);
       const t = setTimeout(() => {
-        const isSilent = data.sound !== 'default';
+        const isSilent = data.sound === 'none';
         const notifOptions = {
           body: data.message || '',
           badge: data.icon || './icon-192.png',
@@ -42,9 +42,6 @@ self.addEventListener('message', (e) => {
           silent: isSilent
         };
         self.registration.showNotification(data.title || 'Reminder', notifOptions);
-        clients.matchAll({ includeUncontrolled: true, type: 'window' }).then((cs) => {
-          cs.forEach((c) => c.postMessage({ type: 'PLAY_SOUND', sound: data.sound || null }));
-        });
       }, delay);
       timers.push(t);
     });
@@ -54,7 +51,7 @@ self.addEventListener('message', (e) => {
     timers = [];
   }
 });
- 
+
 self.addEventListener('notificationclick', (e) => {
   e.notification.close();
   e.waitUntil(
