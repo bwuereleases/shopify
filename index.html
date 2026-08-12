@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#0b0b0f" />
 <link rel="manifest" href="manifest.json" />
 <link rel="apple-touch-icon" href="icon-192.png" />
-<title>Random Notifier</title>
+<title>Reminders</title>
 <style>
   :root {
     --bg: #0b0b0f;
@@ -119,20 +119,21 @@
     <label>Sound</label>
     <div class="sound-row">
       <select id="sound">
+        <option value="default">Default (system sound)</option>
         <option value="none">None (silent)</option>
-        <option value="beep">Beep</option>
-        <option value="chime">Chime</option>
-        <option value="ping">Ping</option>
-        <option value="alert">Alert</option>
+        <option value="beep">Beep (in-app)</option>
+        <option value="chime">Chime (in-app)</option>
+        <option value="ping">Ping (in-app)</option>
+        <option value="alert">Alert (in-app)</option>
       </select>
       <button class="btn btn-ghost" style="width:auto;margin:0;padding:12px 16px" id="testSound">▶︎</button>
     </div>
     <div style="margin-top:12px">
-      <label for="soundUpload">Or upload your own MP3</label>
+      <label for="soundUpload">Or upload your own MP3 (plays in-app only)</label>
       <input type="file" id="soundUpload" accept="audio/*,.mp3" style="color:var(--muted);font-size:14px" />
       <small class="hint" id="soundName" style="display:none;color:var(--accent2)"></small>
     </div>
-    <small class="hint">iOS uses its default notification sound. Your custom sound plays when the app is open/foreground — tap ▶︎ to test.</small>
+    <small class="hint">"Default" uses your device's notification sound and works even when the app is in the background. Custom sounds play only while the app is open.</small>
   </div>
 </div>
 
@@ -165,7 +166,7 @@
 </div>
 
 <div class="warn" id="iosWarn">
-  For real iPhone notifications: tap Share → <b>Add to Home Screen</b>, then open the app from your Home Screen and tap <b>Enable & Start</b>. Keep the app open or recently used — static-hosted web apps can't push while fully closed.
+  For real iPhone notifications: tap Share → <b>Add to Home Screen</b>, then open the app from your Home Screen and tap <b>Enable & Start</b>. Keep the app open or recently used.
 </div>
 
 <div class="times" id="times"></div>
