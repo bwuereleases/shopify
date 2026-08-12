@@ -3,7 +3,7 @@ let selectedLogo = '🔔';
 let customLogoData = null;
 let customSoundData = null;
 let swReg = null;
-
+ 
 // ---------- Logo picker ----------
 const grid = document.getElementById('logoGrid');
 LOGOS.forEach((emoji, i) => {
@@ -19,7 +19,7 @@ LOGOS.forEach((emoji, i) => {
   };
   grid.appendChild(d);
 });
-
+ 
 const logoInput = document.getElementById('logoUpload');
 const logoPreview = document.getElementById('logoPreview');
 logoInput?.addEventListener('change', (e) => {
@@ -35,7 +35,7 @@ logoInput?.addEventListener('change', (e) => {
   };
   reader.readAsDataURL(file);
 });
-
+ 
 // ---------- Sound ----------
 let audioCtx = null;
 let customAudioEl = null;
@@ -66,7 +66,7 @@ function playSynth(kind) {
   });
 }
 function playSound(kind) {
-  if (!kind || kind === 'none') return;
+  if (!kind || kind === 'none' || kind === 'default') return;
   if (kind === 'custom' && customSoundData) {
     ensureAudio();
     if (!customAudioEl) customAudioEl = new Audio();
@@ -77,7 +77,7 @@ function playSound(kind) {
   }
   playSynth(kind);
 }
-
+ 
 const soundSelect = document.getElementById('sound');
 const soundInput = document.getElementById('soundUpload');
 const soundName = document.getElementById('soundName');
@@ -101,7 +101,7 @@ soundInput?.addEventListener('change', (e) => {
   reader.readAsDataURL(file);
 });
 document.getElementById('testSound').onclick = () => playSound(soundSelect.value);
-
+ 
 function randomFireTimes(count, durationMs) {
   const now = Date.now();
   const minGap = Math.min(1000, durationMs / (count * 4));
@@ -113,7 +113,7 @@ function randomFireTimes(count, durationMs) {
   }
   return offsets.filter((o) => o <= durationMs).map((o) => now + Math.round(o));
 }
-
+ 
 async function registerSW() {
   if (!('serviceWorker' in navigator)) return null;
   try {
@@ -125,7 +125,7 @@ async function registerSW() {
 navigator.serviceWorker?.addEventListener('message', (e) => {
   if (e.data?.type === 'PLAY_SOUND') playSound(e.data.sound);
 });
-
+ 
 function updatePerm() {
   const pill = document.getElementById('permPill');
   const p = ('Notification' in window) ? Notification.permission : 'unsupported';
@@ -133,7 +133,7 @@ function updatePerm() {
   pill.className = 'pill ' + (p === 'granted' ? 'on' : 'off');
 }
 updatePerm();
-
+ 
 function makeIcon() {
   if (customLogoData) return customLogoData;
   const c = document.createElement('canvas');
@@ -141,13 +141,13 @@ function makeIcon() {
   const ctx = c.getContext('2d');
   ctx.fillStyle = '#16161d';
   ctx.fillRect(0, 0, 192, 192);
-  ctx.font = '120px -apple-system, sans-serif';
+  ctx.font = '120px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText(selectedLogo || '🔔', 96, 104);
   return c.toDataURL('image/png');
 }
-
+ 
 document.getElementById('startBtn').onclick = async () => {
   ensureAudio();
   if (!('Notification' in window)) {
@@ -158,35 +158,35 @@ document.getElementById('startBtn').onclick = async () => {
   if (perm !== 'granted') perm = await Notification.requestPermission();
   updatePerm();
   if (perm !== 'granted') { alert('Notifications not granted. Enable them in iOS Settings.'); return; }
-
+ 
   await registerSW();
   if (!swReg) { alert('Could not start background scheduler.'); return; }
-
+ 
   const count = Math.max(1, parseInt(document.getElementById('count').value, 10) || 1);
   const dur = Math.max(1, parseInt(document.getElementById('dur').value, 10) || 1);
   const unit = parseInt(document.getElementById('durUnit').value, 10);
   const durationMs = dur * unit;
   const fireTimes = randomFireTimes(count, durationMs);
-
+ 
   swReg.active.postMessage({
     type: 'SCHEDULE', fireTimes,
-    title: document.getElementById('title').value || 'Notification',
+    title: document.getElementById('title').value || 'Reminder',
     message: document.getElementById('message').value || '',
     icon: makeIcon(),
     sound: soundSelect.value
   });
-
+ 
   renderTimes(fireTimes);
   showToast(`Scheduled ${fireTimes.length} notifications over the next ${dur} ${unitLabel(unit)}.`);
 };
-
+ 
 document.getElementById('stopBtn').onclick = async () => {
   await registerSW();
   swReg?.active?.postMessage({ type: 'CANCEL' });
   document.getElementById('times').innerHTML = '';
   showToast('Stopped. No pending notifications.');
 };
-
+ 
 function unitLabel(u) { return u === 1000 ? 'sec' : u === 60000 ? 'min' : 'hr'; }
 function showToast(msg) {
   let t = document.getElementById('toast');
