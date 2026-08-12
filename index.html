@@ -98,6 +98,11 @@
   <div class="field">
     <label>Logo / Icon</label>
     <div class="logo-grid" id="logoGrid"></div>
+    <div style="margin-top:12px">
+      <label for="logoUpload">Or upload your own image</label>
+      <input type="file" id="logoUpload" accept="image/*" style="color:var(--muted);font-size:14px" />
+      <img id="logoPreview" style="display:none;width:64px;height:64px;border-radius:14px;margin-top:10px;object-fit:cover;border:2px solid var(--accent)" />
+    </div>
   </div>
 
   <div class="field">
@@ -122,7 +127,12 @@
       </select>
       <button class="btn btn-ghost" style="width:auto;margin:0;padding:12px 16px" id="testSound">▶︎</button>
     </div>
-    <small class="hint">iOS uses its default notification sound. This custom sound plays when the app is open/foreground.</small>
+    <div style="margin-top:12px">
+      <label for="soundUpload">Or upload your own MP3</label>
+      <input type="file" id="soundUpload" accept="audio/*,.mp3" style="color:var(--muted);font-size:14px" />
+      <small class="hint" id="soundName" style="display:none;color:var(--accent2)"></small>
+    </div>
+    <small class="hint">iOS uses its default notification sound. Your custom sound plays when the app is open/foreground — tap ▶︎ to test.</small>
   </div>
 </div>
 
