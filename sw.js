@@ -1,4 +1,3 @@
-
 const CACHE = 'notifier-v2';
 const ASSETS = ['./', './index.html', './app.js', './manifest.json'];
  
@@ -32,7 +31,7 @@ self.addEventListener('message', (e) => {
     data.fireTimes.forEach((ts, i) => {
       const delay = Math.max(0, ts - now);
       const t = setTimeout(() => {
-        const isSilent = data.sound === 'none';
+        const isSilent = data.sound !== 'default';
         const notifOptions = {
           body: data.message || '',
           badge: data.icon || './icon-192.png',
